@@ -3,6 +3,7 @@ const BUY_ICECREAM = "BUY_ICECREAM";
 //for reactjs -> import redux from 'redux'
 const redux = require("redux");
 const createStore = redux.createStore;
+const combineReducers = redux.combineReducers;
 // ACTION
 function buyCake() {
   return {
@@ -18,22 +19,20 @@ function buyIceCream() {
 }
 
 // reducer
-const initialState = {
+// const initialState = {
+//   numOfCake: 10,
+// };
+
+const initialCakeState = {
   numOfCake: 10,
-  numofIceCreams: 20,
 };
 
-const reducer = (state = initialState, action) => {
+const cakeReducer = (state = initialCakeState, action) => {
   switch (action.type) {
     case BUY_CAKE:
       return {
         ...state,
         numOfCake: state.numOfCake - 1,
-      };
-    case BUY_ICECREAM:
-      return {
-        ...state,
-        numofIceCreams: state.numofIceCreams - 1,
       };
 
     default:
@@ -41,8 +40,27 @@ const reducer = (state = initialState, action) => {
   }
 };
 
+const initialIceCreamState = {
+  numofIceCreams: 20,
+};
+const iceCreameReducer = (state = initialIceCreamState, action) => {
+  switch (action.type) {
+    case BUY_ICECREAM:
+      return {
+        ...state,
+        numofIceCreams: state.numofIceCreams - 1,
+      };
+    default:
+      return state;
+  }
+};
+
 //redux store
-const store = createStore(reducer);
+const rootReducer = combineReducers({
+  cake: cakeReducer,
+  iceCreame: iceCreameReducer,
+});
+const store = createStore(rootReducer);
 console.log("initialState ", store.getState());
 const unSubscribe = store.subscribe(() =>
   console.log("updated state ", store.getState())
