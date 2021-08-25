@@ -1,9 +1,16 @@
-const BUY_CAKE = "BUY_CAKE";
-const BUY_ICECREAM = "BUY_ICECREAM";
 //for reactjs -> import redux from 'redux'
 const redux = require("redux");
+const reduxLogger = require("redux-logger");
+
 const createStore = redux.createStore;
 const combineReducers = redux.combineReducers;
+const applyMiddleware = redux.applyMiddleware;
+const logger = reduxLogger.createLogger();
+
+// ACTION TYPE
+const BUY_CAKE = "BUY_CAKE";
+const BUY_ICECREAM = "BUY_ICECREAM";
+
 // ACTION
 function buyCake() {
   return {
@@ -60,11 +67,9 @@ const rootReducer = combineReducers({
   cake: cakeReducer,
   iceCreame: iceCreameReducer,
 });
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(logger));
 console.log("initialState ", store.getState());
-const unSubscribe = store.subscribe(() =>
-  console.log("updated state ", store.getState())
-);
+const unSubscribe = store.subscribe(() => {});
 store.dispatch(buyCake());
 store.dispatch(buyCake());
 store.dispatch(buyCake());
