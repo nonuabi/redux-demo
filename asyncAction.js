@@ -1,6 +1,8 @@
 const redux = require("redux");
+const thunkMiddleware = require("redux-thunk").default;
+const axios = require("axios");
 const createStore = redux.createStore;
-
+const applyMiddleware = redux.applyMiddleware;
 // Initial State
 const initialState = {
   loading: false,
@@ -41,7 +43,7 @@ const reducer = (state = initialState, action) => {
     case FETCH_USER_REQUEST:
       return {
         ...state,
-        lodding: true,
+        loading: true,
       };
     case FETCH_USER_SUCCESS:
       return {
@@ -62,5 +64,25 @@ const reducer = (state = initialState, action) => {
   }
 };
 
+// Async fetch user api call
+const fetchUsers = () => {
+  return function (dispatch) {
+    dispatch(fetchUserRequest());
+    axios
+      .get("https://my-json-server.typicode.com/nonuabi/Ecommerce-App-DB/posts")
+      .then((response) => {
+        const users = response.data.map((user) => user.id);
+        dispatch(fetchUserSuccess(users));
+      })
+      .catch((err) => {
+        dispatch(fetchUserFailure(err.message));
+      });
+  };
+};
+
 //redux store
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(thunkMiddleware));
+store.subscribe(() => {
+  console.log(store.getState());
+});
+store.dispatch(fetchUsers());
