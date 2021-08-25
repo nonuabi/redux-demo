@@ -1,4 +1,5 @@
 const BUY_CAKE = "BUY_CAKE";
+const BUY_ICECREAM = "BUY_ICECREAM";
 //for reactjs -> import redux from 'redux'
 const redux = require("redux");
 const createStore = redux.createStore;
@@ -10,9 +11,16 @@ function buyCake() {
   };
 }
 
+function buyIceCream() {
+  return {
+    type: BUY_ICECREAM,
+  };
+}
+
 // reducer
 const initialState = {
   numOfCake: 10,
+  numofIceCreams: 20,
 };
 
 const reducer = (state = initialState, action) => {
@@ -22,6 +30,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         numOfCake: state.numOfCake - 1,
       };
+    case BUY_ICECREAM:
+      return {
+        ...state,
+        numofIceCreams: state.numofIceCreams - 1,
+      };
+
     default:
       return state;
   }
@@ -36,4 +50,6 @@ const unSubscribe = store.subscribe(() =>
 store.dispatch(buyCake());
 store.dispatch(buyCake());
 store.dispatch(buyCake());
+store.dispatch(buyIceCream());
+store.dispatch(buyIceCream());
 unSubscribe();
